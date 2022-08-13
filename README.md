@@ -35,7 +35,7 @@ The app is written in ASP.NET Core and SQL Server.
 
 ### Phase 3 - Web App
 
-- [ ] Run [VatMTDController.cs](./mtd-client-vat/controllers/VatMTDController.cs) inside a user session
+- [ ] Run [VatMTDController.cs](https://github.com/TradeControl/hmrc_mtd/blob/master/mtd-client-vat/Controllers/VatMTDController.cs) inside a user session
 - [ ] Liabilities
 - [ ] Submit Returns
 - [ ] Past Returns
