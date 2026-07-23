@@ -1,0 +1,6 @@
+@HMRC.WebHarness_HostAddress = http://localhost:5151
+
+GET {{HMRC.WebHarness_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
