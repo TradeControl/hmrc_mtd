@@ -1,5 +1,13 @@
+//https://localhost:7277/swagger/index.html
 
-// https://localhost:7277/swagger/index.html
+
+using TradeControl.Tax.UK.Infrastructure.Db;
+using TradeControl.Tax.UK.Infrastructure.Logging;
+using TradeControl.Tax.UK.Services.Mapping;
+using TradeControl.Tax.UK.Services.Payload;
+using TradeControl.Tax.UK.Services.Runner;
+using TradeControl.Tax.UK.Services.TcData;
+using TradeControl.Tax.UK.Services.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +17,26 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "HMRC WebHarness API", Version = "v1" });
 });
+
+builder.Services.AddSingleton<ConnectionFactory>();
+builder.Services.AddSingleton<SubmissionLogger>();
+builder.Services.AddSingleton<TagMapper>();
+builder.Services.AddSingleton<CategoryMapper>();
+builder.Services.AddSingleton<TcVatReader>();
+builder.Services.AddSingleton<TcBusinessTaxReader>();
+builder.Services.AddSingleton<VatPayloadBuilder>();
+builder.Services.AddSingleton<QuPayloadBuilder>();
+builder.Services.AddSingleton<EopsPayloadBuilder>();
+builder.Services.AddSingleton<MicroPayloadBuilder>();
+builder.Services.AddSingleton<VatValidator>();
+builder.Services.AddSingleton<QuValidator>();
+builder.Services.AddSingleton<EopsValidator>();
+builder.Services.AddSingleton<MicroValidator>();
+builder.Services.AddSingleton<ObligationValidator>();
+builder.Services.AddSingleton<SubmissionHistoryValidator>();
+builder.Services.AddSingleton<LiabilityValidator>();
+builder.Services.AddSingleton<PaymentValidator>();
+builder.Services.AddSingleton<HmrcSubmissionRunner>();
 
 var app = builder.Build();
 
@@ -23,7 +51,6 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// Redirect root to Swagger UI
 app.MapGet("/", () => Results.Redirect("/swagger"));
 
 app.UseAuthorization();

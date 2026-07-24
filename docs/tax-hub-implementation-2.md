@@ -73,8 +73,6 @@ The implementation work must:
 
 - create the `hmrc_mtd` module as defined in `tax-hub-hmrc-repo-structure.md`,
 - implement canonical payload models and builders,
-- implement validation, mapping, transport, OAuth, fraud headers, audit, and
-  reconciliation,
 - implement `HmrcSubmissionRunner` as the single entry point,
 - implement the WebHarness API,
 - lay the foundation for the future Alignment Agent,
@@ -120,7 +118,7 @@ date as periodCode.
 ``` c
 SUBMIT_VAT(
     taxSourceCode,     // e.g. "UK_MTD_VAT"
-    periodEndOn,       // HMRC period end date (from Cash.vwTaxVatTotals.EndOn)
+    periodEndOn,       // HMRC period end date (from Cash.vwTaxVatTotals.StartOn)
     tenantId,
     subjectId,
     connectionString,
@@ -267,12 +265,12 @@ Enquiry validators must be added to the Services.Validation namespace.
 
 Submission functions use HMRC period end dates:
 
-- VAT → EndOn (from Cash.vwTaxVatTotals)
+- VAT → StartOn (from Cash.vwTaxVatTotals)
 - QU/EOPS/Micro → PeriodTo (from Cash.vwTaxHubSubmission)
 
 Enquiry functions do not use periodCode.
 
-The HMRC_MTD module must not compute EndOn. It must use the dataset value
+The HMRC_MTD module must not compute StartOn. It must use the dataset value
 provided by TCWeb.
 
 ### 5.7 JSON Payload Implementation Rules
@@ -304,9 +302,7 @@ GET_PAYMENTS) do not use SQL datasets; they query HMRC directly.
 
 ### 6.1 VAT Submission Dataset
 
-VAT submissions use the `Cash.vwTaxVatTotals` view. This view must provide both
-the HMRC period start date (`StartOn`) and the HMRC period end date (`EndOn`).
-`EndOn` is computed using `LEAD(StartOn)` in the view definition.
+VAT submissions use the `Cash.vwTaxVatTotals` view. Th HMRC period end date is the 'StartOn' column, which is the name of the composite Primary Key of Cash.tbYearPeriod ('YearNumber;StartOn')
 
 Required columns:
 
@@ -315,7 +311,6 @@ SELECT YearNumber,
        Description,
        Period,
        StartOn,
-       EndOn,              -- HMRC period end date (LEAD(StartOn))
        HomeSales,
        HomePurchases,
        ExportSales,
@@ -329,7 +324,7 @@ SELECT YearNumber,
 FROM Cash.vwTaxVatTotals;
 ```
 
-The `EndOn` column is the HMRC period end date and is passed to SUBMIT_VAT as `periodEndOn`.
+The `StartOn` column is the HMRC period end date and is passed to SUBMIT_VAT as `periodEndOn`.
 
 ### 6.2 Business Tax Submission Dataset (QU, EOPS, Micro)
 

@@ -365,3 +365,4 @@ FodyWeavers.xsd
 # Trade Control
 docs/tmp/
 .aider*
+test/

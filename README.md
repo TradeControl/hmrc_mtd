@@ -24,7 +24,6 @@ The HMRC_MTD repo is a sub-module of [treadecontrol.web](https://github.com/Trad
 ## Repository Status
 
 The master branch has been reset for the 2026 implementation.  
-All previous prototype code has been archived in a separate branch.
 
 This branch is now ready for the coding model to generate the new module
 according to the published specifications.
