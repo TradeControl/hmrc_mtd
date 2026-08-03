@@ -95,7 +95,7 @@ implementation instructions.
 
 ### QU / EOPS / Micro
 
-- Read from `Cash.vwTaxHubSubmission`
+- Read from `Cash.vwTaxBizSubmission`
 - Use `PeriodFrom` and `PeriodTo`
 - Treat `PeriodTo` as the HMRC period end date supplied by the dataset
 

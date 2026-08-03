@@ -131,7 +131,7 @@ SUBMIT_VAT(
 ``` c
 SUBMIT_QU(
     taxSourceCode,     // "QU"
-    periodTo,          // HMRC period end date (from Cash.vwTaxHubSubmission.PeriodTo)
+    periodTo,          // HMRC period end date (from Cash.vwTaxBizSubmission.PeriodTo)
     tenantId,
     subjectId,
     connectionString,
@@ -266,7 +266,7 @@ Enquiry validators must be added to the Services.Validation namespace.
 Submission functions use HMRC period end dates:
 
 - VAT → StartOn (from Cash.vwTaxVatTotals)
-- QU/EOPS/Micro → PeriodTo (from Cash.vwTaxHubSubmission)
+- QU/EOPS/Micro → PeriodTo (from Cash.vwTaxBizSubmission)
 
 Enquiry functions do not use periodCode.
 
@@ -329,7 +329,7 @@ The `StartOn` column is the HMRC period end date and is passed to SUBMIT_VAT as 
 ### 6.2 Business Tax Submission Dataset (QU, EOPS, Micro)
 
 Quarterly Update, End‑of‑Period Statement, and Micro submissions use the
-`Cash.vwTaxHubSubmission` view. This view provides the HMRC‑aligned period end date (`PeriodTo`) directly.
+`Cash.vwTaxBizSubmission` view. This view provides the HMRC‑aligned period end date (`PeriodTo`) directly.
 
 Required columns:
 
@@ -339,7 +339,7 @@ SELECT TaxSourceCode,
        PeriodFrom,
        PeriodTo,          -- HMRC period end date
        TaxableAmount
-FROM Cash.vwTaxHubSubmission;
+FROM Cash.vwTaxBizSubmission;
 ```
 
 ### 6.3 Dataset Rules
@@ -347,7 +347,7 @@ FROM Cash.vwTaxHubSubmission;
 - Submission functions must read only from these two views.
 - HMRC_MTD must not compute HMRC period dates; it must use the values provided by TCWeb from these views.
 - VAT submissions use `EndOn` from `Cash.vwTaxVatTotals`.
-- QU/EOPS/Micro submissions use `PeriodTo` from `Cash.vwTaxHubSubmission`.
+- QU/EOPS/Micro submissions use `PeriodTo` from `Cash.vwTaxBizSubmission`.
 - Enquiry functions do not use SQL datasets.
 
 These two views constitute the complete dataset surface required for HMRC_MTD submission operations.

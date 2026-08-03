@@ -28,39 +28,17 @@ public sealed class VatPayloadBuilder
             throw new InvalidOperationException("No VAT dataset row was found for the requested period.");
         }
 
-        //var vatDueSales = _categoryMapper.ToAmount(row.HomeSalesVat);
-        //var vatDueAcquisitions = _categoryMapper.ToAmount(row.ExportSalesVat);
-        //var totalVatDue = _categoryMapper.ToAmount(vatDueSales + vatDueAcquisitions);
-        //var vatReclaimedCurrPeriod = _categoryMapper.ToAmount(row.HomePurchasesVat + row.ExportPurchasesVat);
-        //var netVatDue = _categoryMapper.ToAmount(row.VatDue);
-
-        var vatDueSales = _categoryMapper.ToAmount(row.HomeSalesVat);
-        var vatDueAcquisitions = _categoryMapper.ToAmount(row.ExportPurchasesVat);
-
-        var totalVatDue = _categoryMapper.ToAmount(
-            row.HomeSalesVat +
-            row.ExportSalesVat +
-            row.VatAdjustment
-        );
-
-        var vatReclaimedCurrPeriod = _categoryMapper.ToAmount(
-            row.HomePurchasesVat +
-            row.ExportPurchasesVat
-        );
-
-        var netVatDue = _categoryMapper.ToAmount(row.VatDue);
-
         var items = new List<PayloadItem>
         {
-            new() { Tag = "vatDueSales", Value = vatDueSales },
-            new() { Tag = "vatDueAcquisitions", Value = vatDueAcquisitions },
-            new() { Tag = "totalVatDue", Value = totalVatDue },
-            new() { Tag = "vatReclaimedCurrPeriod", Value = vatReclaimedCurrPeriod },
-            new() { Tag = "netVatDue", Value = netVatDue },
-            new() { Tag = "totalValueSalesExVAT", Value = _categoryMapper.ToWholeNumber(row.HomeSales + row.ExportSales) },
-            new() { Tag = "totalValuePurchasesExVAT", Value = _categoryMapper.ToWholeNumber(row.HomePurchases + row.ExportPurchases) },
-            new() { Tag = "totalValueGoodsSuppliedExVAT", Value = _categoryMapper.ToWholeNumber(row.ExportSales) },
-            new() { Tag = "totalValueGoodsReceivedExVAT", Value = _categoryMapper.ToWholeNumber(row.ExportPurchases) }
+            new() { Tag = "vatDueSales", Value = _categoryMapper.ToAmount(row.VatDueSales) },
+            new() { Tag = "vatDueAcquisitions", Value = _categoryMapper.ToAmount(row.VatDueAcquisitions) },
+            new() { Tag = "totalVatDue", Value = _categoryMapper.ToAmount(row.TotalVatDue) },
+            new() { Tag = "vatReclaimedCurrPeriod", Value = _categoryMapper.ToAmount(row.VatReclaimedCurrPeriod) },
+            new() { Tag = "netVatDue", Value = _categoryMapper.ToAmount(row.NetVatDue) },
+            new() { Tag = "totalValueSalesExVAT", Value = _categoryMapper.ToWholeNumber(row.TotalValueSalesExVat) },
+            new() { Tag = "totalValuePurchasesExVAT", Value = _categoryMapper.ToWholeNumber(row.TotalValuePurchasesExVat) },
+            new() { Tag = "totalValueGoodsSuppliedExVAT", Value = _categoryMapper.ToWholeNumber(row.TotalValueGoodsSuppliedExVat) },
+            new() { Tag = "totalValueGoodsReceivedExVAT", Value = _categoryMapper.ToWholeNumber(row.TotalValueGoodsReceivedExVat) }
         };
 
         return new VatPayload
@@ -68,7 +46,7 @@ public sealed class VatPayloadBuilder
             PayloadVersion = "2026.1",
             TaxSourceCode = taxSourceCode,
             PeriodStart = row.StartOn.ToString("yyyy-MM-dd"),
-            PeriodEnd = row.StartOn.ToString("yyyy-MM-dd"),
+            PeriodEnd = row.VatEndOn.ToString("yyyy-MM-dd"),
             SubjectCode = subjectCode,
             Items = items,
             Meta = new Dictionary<string, object?>

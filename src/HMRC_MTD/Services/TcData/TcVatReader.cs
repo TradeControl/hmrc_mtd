@@ -23,17 +23,17 @@ SELECT YearNumber,
        Description,
        Period,
        StartOn,
-       HomeSales,
-       HomePurchases,
-       ExportSales,
-       ExportPurchases,
-       HomeSalesVat,
-       HomePurchasesVat,
-       ExportSalesVat,
-       ExportPurchasesVat,
-       VatAdjustment,
-       VatDue
-FROM Cash.vwTaxVatTotals
+       VatEndOn,
+       vatDueSales,
+       vatDueAcquisitions,
+       totalVatDue,
+       vatReclaimedCurrPeriod,
+       netVatDue,
+       totalValueSalesExVAT,
+       totalValuePurchasesExVAT,
+       totalValueGoodsSuppliedExVAT,
+       totalValueGoodsReceivedExVAT
+FROM Cash.vwTaxVatSubmission
 WHERE StartOn = @StartOn;
 """;
 
@@ -55,16 +55,16 @@ WHERE StartOn = @StartOn;
             Description = SqlHelpers.GetString(reader, "Description"),
             Period = SqlHelpers.GetString(reader, "Period"),
             StartOn = SqlHelpers.GetDateTime(reader, "StartOn"),
-            HomeSales = SqlHelpers.GetDecimal(reader, "HomeSales"),
-            HomePurchases = SqlHelpers.GetDecimal(reader, "HomePurchases"),
-            ExportSales = SqlHelpers.GetDecimal(reader, "ExportSales"),
-            ExportPurchases = SqlHelpers.GetDecimal(reader, "ExportPurchases"),
-            HomeSalesVat = SqlHelpers.GetDecimal(reader, "HomeSalesVat"),
-            HomePurchasesVat = SqlHelpers.GetDecimal(reader, "HomePurchasesVat"),
-            ExportSalesVat = SqlHelpers.GetDecimal(reader, "ExportSalesVat"),
-            ExportPurchasesVat = SqlHelpers.GetDecimal(reader, "ExportPurchasesVat"),
-            VatAdjustment = SqlHelpers.GetDecimal(reader, "VatAdjustment"),
-            VatDue = SqlHelpers.GetDecimal(reader, "VatDue")
+            VatEndOn = SqlHelpers.GetDateTime(reader, "VatEndOn"),
+            VatDueSales = SqlHelpers.GetDecimal(reader, "vatDueSales"),
+            VatDueAcquisitions = SqlHelpers.GetDecimal(reader, "vatDueAcquisitions"),
+            TotalVatDue = SqlHelpers.GetDecimal(reader, "totalVatDue"),
+            VatReclaimedCurrPeriod = Math.Abs(SqlHelpers.GetDecimal(reader, "vatReclaimedCurrPeriod")),
+            NetVatDue = SqlHelpers.GetDecimal(reader, "netVatDue"),
+            TotalValueSalesExVat = SqlHelpers.GetDecimal(reader, "totalValueSalesExVAT"),
+            TotalValuePurchasesExVat = SqlHelpers.GetDecimal(reader, "totalValuePurchasesExVAT"),
+            TotalValueGoodsSuppliedExVat = SqlHelpers.GetDecimal(reader, "totalValueGoodsSuppliedExVAT"),
+            TotalValueGoodsReceivedExVat = SqlHelpers.GetDecimal(reader, "totalValueGoodsReceivedExVAT")
         };
     }
 }

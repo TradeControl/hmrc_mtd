@@ -25,7 +25,7 @@ SELECT TaxSourceCode,
        PeriodFrom,
        PeriodTo,
        TaxableAmount
-FROM Cash.vwTaxHubSubmission
+FROM Cash.vwTaxBizSubmission
 WHERE TaxSourceCode = @TaxSourceCode
   AND PeriodTo = @PeriodTo
 ORDER BY TagCode;
@@ -49,7 +49,7 @@ ORDER BY TagCode;
                 TagCode = SqlHelpers.GetString(reader, "TagCode"),
                 PeriodFrom = SqlHelpers.GetDateTime(reader, "PeriodFrom"),
                 PeriodTo = SqlHelpers.GetDateTime(reader, "PeriodTo"),
-                TaxableAmount = SqlHelpers.GetDecimal(reader, "TaxableAmount")
+                TaxableAmount = Math.Abs(SqlHelpers.GetDecimal(reader, "TaxableAmount"))
             });
         }
 
