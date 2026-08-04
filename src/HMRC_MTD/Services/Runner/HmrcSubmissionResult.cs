@@ -6,7 +6,7 @@ public sealed class HmrcSubmissionResult
 {
     public required string Status { get; init; }
 
-    public object? CanonicalPayload { get; init; }
+    public object? Payload { get; init; }
 
     public object? HmrcResponse { get; init; }
 

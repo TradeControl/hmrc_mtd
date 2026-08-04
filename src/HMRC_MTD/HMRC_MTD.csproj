@@ -11,4 +11,9 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Hmrc\" />
+    <Folder Include="Services\Transport\" />
+  </ItemGroup>
+
 </Project>

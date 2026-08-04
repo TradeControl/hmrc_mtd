@@ -1,11 +1,11 @@
-using TradeControl.Tax.UK.Models.Canonical;
+using TradeControl.Tax.UK.Models.Harness;
 using TradeControl.Tax.UK.Models.Tc;
 
 namespace TradeControl.Tax.UK.Services.Mapping;
 
 public sealed class TagMapper
 {
-    public IReadOnlyList<PayloadItem> MapBusinessTaxItems(
+    public IReadOnlyList<PayloadHarnessItem> MapBusinessTaxItems(
         IEnumerable<TcBusinessTaxView> rows,
         IReadOnlyList<string> expectedTags)
     {
@@ -16,7 +16,7 @@ public sealed class TagMapper
                 g => g.Sum(x => x.TaxableAmount),
                 StringComparer.OrdinalIgnoreCase);
 
-        var items = new List<PayloadItem>(expectedTags.Count);
+        var items = new List<PayloadHarnessItem>(expectedTags.Count);
 
         foreach (var tag in expectedTags)
         {
@@ -26,7 +26,7 @@ public sealed class TagMapper
                 value = 0;
             }
 
-            items.Add(new PayloadItem
+            items.Add(new PayloadHarnessItem
             {
                 Tag = tag,
                 Value = decimal.Round(value, 2, MidpointRounding.AwayFromZero)

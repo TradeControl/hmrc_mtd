@@ -1,10 +1,10 @@
-using TradeControl.Tax.UK.Models.Canonical;
+using TradeControl.Tax.UK.Models.Harness;
 using TradeControl.Tax.UK.Services.Mapping;
 using TradeControl.Tax.UK.Services.TcData;
 
-namespace TradeControl.Tax.UK.Services.Payload;
+namespace TradeControl.Tax.UK.Services.Harness;
 
-public sealed class EopsPayloadBuilder
+public sealed class EopsHarnessPayloadBuilder
 {
     private static readonly string[] Tags =
     [
@@ -92,13 +92,13 @@ public sealed class EopsPayloadBuilder
     private readonly TcBusinessTaxReader _reader;
     private readonly TagMapper _tagMapper;
 
-    public EopsPayloadBuilder(TcBusinessTaxReader reader, TagMapper tagMapper)
+    public EopsHarnessPayloadBuilder(TcBusinessTaxReader reader, TagMapper tagMapper)
     {
         _reader = reader;
         _tagMapper = tagMapper;
     }
 
-    public async Task<EopsPayload> BuildAsync(
+    public async Task<EopsHarnessPayload> BuildAsync(
         string connectionString,
         string taxSourceCode,
         string subjectCode,
@@ -117,19 +117,19 @@ public sealed class EopsPayloadBuilder
             {
                 if (x.Tag is "basisPeriodStart")
                 {
-                    return new PayloadItem { Tag = x.Tag, Value = periodFrom.ToString("yyyy-MM-dd") };
+                    return new PayloadHarnessItem { Tag = x.Tag, Value = periodFrom.ToString("yyyy-MM-dd") };
                 }
 
                 if (x.Tag is "basisPeriodEnd")
                 {
-                    return new PayloadItem { Tag = x.Tag, Value = periodTo.ToString("yyyy-MM-dd") };
+                    return new PayloadHarnessItem { Tag = x.Tag, Value = periodTo.ToString("yyyy-MM-dd") };
                 }
 
                 return x;
             })
             .ToList();
 
-        return new EopsPayload
+        return new EopsHarnessPayload
         {
             PayloadVersion = "2026.1",
             TaxSourceCode = taxSourceCode,

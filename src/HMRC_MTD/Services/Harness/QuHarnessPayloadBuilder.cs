@@ -1,10 +1,10 @@
-using TradeControl.Tax.UK.Models.Canonical;
+using TradeControl.Tax.UK.Models.Harness;
 using TradeControl.Tax.UK.Services.Mapping;
 using TradeControl.Tax.UK.Services.TcData;
 
-namespace TradeControl.Tax.UK.Services.Payload;
+namespace TradeControl.Tax.UK.Services.Harness;
 
-public sealed class QuPayloadBuilder
+public sealed class QuHarnessPayloadBuilder
 {
     private static readonly string[] Tags =
     [
@@ -30,13 +30,13 @@ public sealed class QuPayloadBuilder
     private readonly TcBusinessTaxReader _reader;
     private readonly TagMapper _tagMapper;
 
-    public QuPayloadBuilder(TcBusinessTaxReader reader, TagMapper tagMapper)
+    public QuHarnessPayloadBuilder(TcBusinessTaxReader reader, TagMapper tagMapper)
     {
         _reader = reader;
         _tagMapper = tagMapper;
     }
 
-    public async Task<QuPayload> BuildAsync(
+    public async Task<QuHarnessPayload> BuildAsync(
         string connectionString,
         string taxSourceCode,
         string subjectCode,
@@ -52,7 +52,7 @@ public sealed class QuPayloadBuilder
         var periodFrom = rows.Min(x => x.PeriodFrom);
         var items = _tagMapper.MapBusinessTaxItems(rows, Tags);
 
-        return new QuPayload
+        return new QuHarnessPayload
         {
             PayloadVersion = "2026.1",
             TaxSourceCode = taxSourceCode,

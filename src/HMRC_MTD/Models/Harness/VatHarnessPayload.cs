@@ -1,6 +1,6 @@
-namespace TradeControl.Tax.UK.Models.Canonical;
+namespace TradeControl.Tax.UK.Models.Harness;
 
-public sealed class MicroPayload
+public sealed class VatHarnessPayload
 {
     public required string PayloadVersion { get; init; }
 
@@ -12,7 +12,7 @@ public sealed class MicroPayload
 
     public required string SubjectCode { get; init; }
 
-    public required IReadOnlyList<PayloadItem> Items { get; init; }
+    public required IReadOnlyList<PayloadHarnessItem> Items { get; init; }
 
     public Dictionary<string, object?>? Meta { get; init; }
 }

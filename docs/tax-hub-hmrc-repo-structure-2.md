@@ -1,26 +1,22 @@
-# hmrc_mtd — Repository Structure
+# hmrc_mtd — Objective 2 Repository Structure  
 
-July 2026  
-Version: Objective 2.1
-
+August 2026  
+Version: Objective 2.3  
 Status: Architectural Specification  
 Scope: HMRC Integration Module (GitHub Submodule for TCWeb)
 
-## 1. Overview
+## 1. Overview (Updated)
 
-The `hmrc_mtd` repository provides the HMRC integration layer for Trade Control:
+The `hmrc_mtd` repository provides:
 
-- Data-aware HMRC submission engine (connection string provided by TCWeb)
-- Canonical payload generation (QU, EOPS, MTD Micro, VAT)
-- Validation and reconciliation against Trade Control accounting views
-- OAuth lifecycle management
-- Fraud header construction
-- HMRC transport (sandbox + production)
-- Submission audit and history
-- WebHarness API for development/testing
-- Future HMRC Alignment Agent (scheduled reconciliation)
+- Test harness payload generation (Objective 2)  
+- HMRC API payload generation (Objective 3)  
+- HMRC transport (Objective 4)  
+- Submission audit and history  
+- WebHarness API for development/testing  
+- Future HMRC Alignment Agent  
 
-The module is delivered as a **GitHub submodule** and runs **inside TCWeb’s process**, using the same tenant isolation and database connection.
+The module runs inside TCWeb’s process.
 
 ## 2. High-Level Architecture
 
@@ -47,40 +43,28 @@ hmrc_mtd (submodule)
 TCWeb has **no HMRC knowledge**.  
 All HMRC semantics live inside `hmrc_mtd`.
 
-## 3. Repository Layout — Updated (July 2026)
+## 3. Repository Layout (Updated)
 
-The `hmrc_mtd` repository follows the same architectural conventions as TCExport.
-It implements HMRC submission and enquiry operations through:
-
-- a concrete payload model (`HmrcPayload`)
-- a concrete result model (`HmrcResult`)
-- an `OperationType` enum
-- per‑operation payload builders
-- per‑operation validators
-- a single execution engine (`HmrcSubmissionRunner`)
-- a switch‑based dispatch model inside the engine (mirroring TCExport)
-
-The repository layout is:
+### New structure
 
 ``` text
 hmrc_mtd/
 │
 ├── src/
 │   ├── Models/
-│   │   ├── Canonical/
-│   │   │   ├── QuPayload.cs
-│   │   │   ├── EopsPayload.cs
-│   │   │   ├── MicroPayload.cs
-│   │   │   ├── VatPayload.cs
-│   │   │   └── PayloadEnvelope.cs
+│   │   ├── Harness/
+│   │   │   ├── QuHarnessPayload.cs
+│   │   │   ├── EopsHarnessPayload.cs
+│   │   │   ├── MicroHarnessPayload.cs
+│   │   │   ├── VatHarnessPayload.cs
+│   │   │   └── HarnessEnvelope.cs
 │   │   │
 │   │   ├── Hmrc/
-│   │   │   ├── Obligation.cs
-│   │   │   ├── Submission.cs
-│   │   │   ├── Liability.cs
-│   │   │   ├── Payment.cs
-│   │   │   ├── FraudHeaders.cs
-│   │   │   └── HmrcError.cs
+│   │   │   ├── VatHmrcPayload.cs
+│   │   │   ├── QuHmrcPayload.cs
+│   │   │   ├── EopsHmrcPayload.cs
+│   │   │   ├── Ct600XmlPayload.cs
+│   │   │   └── IxbrlPayload.cs
 │   │   │
 │   │   ├── Tc/
 │   │   │   ├── TcVatStatement.cs
@@ -94,24 +78,34 @@ hmrc_mtd/
 │   │
 │   ├── Services/
 │   │   ├── Runner/
-│   │   │   ├── HmrcSubmissionRunner.cs      # Entry point (mirrors ExportRunner)
+│   │   │   ├── HmrcSubmissionRunner.cs
 │   │   │   └── HmrcSubmissionRequest.cs
 │   │   │
-│   │   ├── Payload/
-│   │   │   ├── QuPayloadBuilder.cs
-│   │   │   ├── EopsPayloadBuilder.cs
-│   │   │   ├── MicroPayloadBuilder.cs
-│   │   │   └── VatPayloadBuilder.cs
+│   │   ├── Harness/
+│   │   │   ├── PayloadBuilders/
+│   │   │   │   ├── QuHarnessPayloadBuilder.cs
+│   │   │   │   ├── EopsHarnessPayloadBuilder.cs
+│   │   │   │   ├── MicroHarnessPayloadBuilder.cs
+│   │   │   │   └── VatHarnessPayloadBuilder.cs
+│   │   │   │
+│   │   │   ├── Validators/
+│   │   │   │   ├── QuValidator.cs
+│   │   │   │   ├── EopsValidator.cs
+│   │   │   │   ├── MicroValidator.cs
+│   │   │   │   └── VatValidator.cs
+│   │   │   │
+│   │   │   └── Controllers/
+│   │   │       ├── QuTestController.cs
+│   │   │       ├── EopsTestController.cs
+│   │   │       ├── MicroTestController.cs
+│   │   │       └── VatTestController.cs
 │   │   │
-│   │   ├── Validation/
-│   │   │   ├── QuValidator.cs
-│   │   │   ├── EopsValidator.cs
-│   │   │   ├── MicroValidator.cs
-│   │   │   ├── VatValidator.cs
-│   │   │   ├── ObligationValidator.cs
-│   │   │   ├── LiabilityValidator.cs
-│   │   │   ├── PaymentValidator.cs
-│   │   │   └── SubmissionHistoryValidator.cs
+│   │   ├── Hmrc/
+│   │   │   ├── PayloadBuilders/
+│   │   │   ├── Validators/
+│   │   │   ├── XmlBuilders/
+│   │   │   ├── IxbrlBuilders/
+│   │   │   └── ApiModels/
 │   │   │
 │   │   ├── Mapping/
 │   │   │   ├── TagMapper.cs
@@ -145,17 +139,15 @@ hmrc_mtd/
 │   └── hmrc_mtd.csproj
 │
 ├── tests/
-│   ├── PayloadTests/
+│   ├── HarnessTests/
+│   ├── HmrcPayloadTests/
 │   ├── ValidationTests/
 │   ├── TransportTests/
 │   ├── AlignmentTests/
 │   └── WebHarnessTests/
 │
 └── docs/
-    ├── architecture.md
-    ├── payloads.md
-    ├── alignment-agent.md
-    └── webharness.md
+
 ```
 
 ## 4. WebHarness API
@@ -243,21 +235,11 @@ TCWeb never sees HMRC payloads.
 
 ## 7. Summary
 
-- **Data-aware module**: Yes  
-- **Connection string passed in**: Yes  
-- **State integrity + reconciliation**: Yes  
-- **WebHarness API**: Yes  
-- **Alignment Agent**: Yes  
-- **TCWeb HMRC-agnostic**: Yes  
-- **GitHub submodule**: Yes  
+Updated to reflect:
 
-This structure supports:
-
-- first release (simple submission)  
-- future releases (full HMRC alignment)  
-- multi-tenant Azure deployment  
-- clean separation of concerns  
-- TCExport architectural consistency  
+- Harness payloads (Objective 2)  
+- HMRC payloads (Objective 3)  
+- Transport (Objective 4)  
+- Workflow integration (Objective 5)
 
 **End of document.**
-

@@ -1,82 +1,40 @@
-# Tax Hub — Payload Specification  
+# Tax Hub — Test Harness Payload Specification  
 
-July 2026  
-Version: Objective 2.1  
+August 2026  
+Version: Objective 2.2  
 
 Author: TradeControl / Tax Hub  
-Status: Draft for Implementation
+Status: Implementation Specification (Internal Harness)
 
 ## 1. Overview
 
-This document defines the **payload schemas** for all four tax sources supported by the Tax Hub:
+This document defines the **internal test harness payload schemas** used by the Tax Hub Submission Logic (Objective 2).
+
+These payloads are **not HMRC payloads**.  
+They are **internal tag-based data structures** generated from Trade Control accounting data and returned by the WebHarness API for development, validation, and mapping verification.
+
+The harness supports four tax sources:
 
 - **UK‑ITSA‑SE‑QU** — Quarterly Update (Self‑Employment)  
 - **UK‑ITSA‑SE‑EOPS** — End of Period Statement (Self‑Employment)  
-- **UK‑MTD** — Micro‑entity (FRS105 + CT600‑aligned)  
-- **VAT** — MTD VAT Return  
+- **UK‑MTD‑MICRO** — Micro‑entity accounting tags (FRS105-derived)  
+- **VAT‑MTD** — VAT Return tag set  
 
-Payloads are derived from:
+Harness payloads are derived from:
 
-- HMRC statutory definitions  
-- SA103F/SA103S forms  
-- MTD ITSA guidance  
-- FRS105 micro‑entity accounting standard  
-- CT600 guidance  
-- HMRC VAT API schema  
-- Internal tag sets and mappings defined in the SQL templates  
-  (QU tags: ;  
-   EOPS tags: ;  
-   Micro‑entity tags: AC12/AC405/etc. )
+- Internal SQL templates  
+- Tag seeds  
+- Category mappings  
+- Accounting engine outputs  
+- Tax classification layer  
 
-All payloads follow the Tax Hub transport conventions:
+These payloads serve as **raw tag sets** from which HMRC submission payloads (Objective 3) will later be constructed.
 
-- `payloadVersion`  
-- `taxSourceCode`  
-- `periodStart` / `periodEnd`  
-- `subjectCode`  
-- `items[]` — list of tagged values  
-- `meta` — optional metadata
+## 2. Transport Envelope (Harness)
 
-## 2. HMRC Source References
+All harness payloads use a simple JSON envelope:
 
-### 2.1 UK‑ITSA‑SE‑QU
-
-Quarterly Update statutory definitions:
-
-- [MTD ITSA Quarterly Update guidance](https://www.gov.uk/guidance/using-making-tax-digital-for-income-tax)
-- [SA103S (short return) - Quarterly Update categories](https://www.gov.uk/guidance/income-tax-quarterly-updates-for-making-tax-digital)
-- [SA103F (full self‑employment return) — underlying statutory definitions](https://www.gov.uk/government/publications/self-assessment-tax-return-sa103f)
-
-### 2.2 UK‑ITSA‑SE‑EOPS
-
-Annual business return statutory definitions:
-
-- [SA103F (full self‑employment return)](https://www.gov.uk/government/publications/self-assessment-tax-return-sa103f)
-- [SA103S (short self‑employment return)](https://www.gov.uk/government/publications/self-assessment-tax-return-sa103s)
-- [EOPS guidance](https://www.gov.uk/guidance/end-of-period-statements-for-making-tax-digital)
-- Basis period reform rules  
-- Capital allowances rules  
-- Losses rules
-
-### 2.3 UK‑MTD (Micro‑entity)
-
-Micro‑entity statutory definitions:
-
-- [FRS 105 (micro‑entity accounting standard)](https://www.frc.org.uk/accountants/accounting-and-reporting-policy/frs-105)
-- [Companies House micro‑entity accounts guidance](https://www.gov.uk/prepare-file-abridged-or-micro-entity-accounts)
-- [CT600 guidance (for tax adjustments)](https://www.gov.uk/government/publications/self-assessment-company-tax-return-ct600)
-
-### 2.4 VAT
-
-HMRC VAT API (official JSON schema):
-
-- [MTD VAT API documentation](https://developer.service.hmrc.gov.uk/api-documentation)
-- [VAT obligations API](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/vat-api/1.0)
-- [VAT returns API](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/vat-api/1.0#vat-returns)
-
-## 3. Transport Envelope (all payloads)
-
-``` json
+```json
 {
     "payloadVersion": "2026.1",
     "taxSourceCode": "UK-ITSA-SE-QU",
@@ -84,19 +42,19 @@ HMRC VAT API (official JSON schema):
     "periodEnd": "2026-07-05",
     "subjectCode": "SUB123",
     "items": [
-    { "tag": "turnover", "value": 12345 }
+        { "tag": "turnover", "value": 12345 }
     ],
     "meta": {
-    "submittedAt": "2026-07-21T10:00:00Z"
+        "generatedAt": "2026-07-21T10:00:00Z"
     }
 }
 ```
 
-## 4. UK‑ITSA‑SE‑QU Payload
+## 3. UK‑ITSA‑SE‑QU Payload
 
 Quarterly Update field set (tags defined in SQL seed: )
 
-### 4.1 Tag List
+### 3.1 Tag List
 
 All tags are numeric except where noted.
 
@@ -118,7 +76,7 @@ All tags are numeric except where noted.
 - depreciation  
 - otherExpenses  
 
-### 4.2 JSON Schema
+### 3.2 JSON Schema
 
 ``` json
 {
@@ -149,11 +107,11 @@ All tags are numeric except where noted.
 }
 ```
 
-## 5. UK‑ITSA‑SE‑EOPS Payload
+## 4. UK‑ITSA‑SE‑EOPS Payload
 
-Annual business return field set (tags defined in SQL seed: )
+Annual business return tag set (defined in SQL seed).
 
-### 5.1 Tag Groups
+### 4.1 Tag Groups
 
 EOPS includes all QU tags plus:
 
@@ -234,7 +192,7 @@ EOPS includes all QU tags plus:
 - poolClosingValueSingleAsset  
 - capitalAllowancesTotal  
 
-### 5.2 JSON Schema
+### 4.2 JSON Schema
 
 ``` json
 {
@@ -259,12 +217,15 @@ EOPS includes all QU tags plus:
 }
 ```
 
-## 6. UK‑MTD Micro‑Entity Payload
+## 5. UK‑MTD‑MICRO Harness Payload
 
-Tags defined in SQL template: AC12, AC405, AC410, AC415, AC420, AC425, AC34, AC435, CP28, CP46  
-(see: `App.proc_Template_CO_MICRO_CUR_2026`)
+Micro‑entity accounting tags (FRS105-derived).
+These are **internal accounting tags**, not CT600 payloads.
 
-### 6.1 Tag List
+Tags defined in SQL template:
+AC12, AC405, AC410, AC415, AC420, AC425, AC34, AC435, CP28, CP46
+
+### 5.1 Tag List
 
 - AC12 — Turnover  
 - AC405 — Other Income  
@@ -277,7 +238,7 @@ Tags defined in SQL template: AC12, AC405, AC410, AC415, AC420, AC425, AC34, AC4
 - CP28 — Depreciation charge  
 - CP46 — Depreciation adjustment  
 
-### 6.2 JSON Schema
+### 5.2 JSON Schema
 
 ``` json
 {
@@ -301,11 +262,11 @@ Tags defined in SQL template: AC12, AC405, AC410, AC415, AC420, AC425, AC34, AC4
 }
 ```
 
-## 7. VAT Payload
+## 6. VAT Harness Payload
 
-Fields defined by HMRC VAT API.
+Fields defined by HMRC VAT API, but used here only as **internal tag values**.
 
-### 7.1 Tag List
+### 6.1 Tag List
 
 - vatDueSales  
 - vatDueAcquisitions  
@@ -317,7 +278,7 @@ Fields defined by HMRC VAT API.
 - totalValueGoodsSuppliedExVAT  
 - totalValueGoodsReceivedExVAT  
 
-### 7.2 JSON Schema
+### 6.2 JSON Schema
 
 ``` json
 {
@@ -340,23 +301,23 @@ Fields defined by HMRC VAT API.
 }
 ```
 
-## 8. Validation Rules (all payloads)
+## 7. Validation Rules (all payloads)
 
 - All numeric fields must be non‑negative.  
 - Dates must be ISO‑8601.  
 - Tag codes must match the tax source.  
 - Items must not contain duplicates.  
-- Derived totals (EOPS) must be consistent with HMRC rules.  
-- VAT fields must satisfy HMRC VAT API constraints.
+- Derived totals (EOPS) must be internally consistent  
+- VAT fields must satisfy basic arithmetic constraints.
 
-## 9. Implementation Notes
+## 8. Implementation Notes
 
 - QU and EOPS tags are created in the Sole Trader template (see: `App.proc_Template_ST_SOLE_CUR_MIN_2026`).  
+- Category mappings for QU/EOPS are defined in section 80 (see: `App.proc_Template_ST_SOLE_CUR_MIN_2026`).  
 - Micro‑entity tags are created in the MICRO template (see: `App.proc_Template_CO_MICRO_CUR_2026`).  
-- Category mappings for QU/EOPS are defined in section 80 (see: ).  
-- VAT is handled separately via HMRC API.
+- VAT values are sourced from the VAT Submission reader (`Cash.vwTaxVatSubmission`).
 
-## 10. Appendix — Tag Classes
+## 9. Appendix — Tag Classes
 
 TagClassCode meanings (from SQL seeds):
 

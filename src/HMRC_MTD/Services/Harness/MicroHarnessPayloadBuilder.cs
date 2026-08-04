@@ -1,10 +1,10 @@
-using TradeControl.Tax.UK.Models.Canonical;
+using TradeControl.Tax.UK.Models.Harness;
 using TradeControl.Tax.UK.Services.Mapping;
 using TradeControl.Tax.UK.Services.TcData;
 
-namespace TradeControl.Tax.UK.Services.Payload;
+namespace TradeControl.Tax.UK.Services.Harness;
 
-public sealed class MicroPayloadBuilder
+public sealed class MicroHarnessPayloadBuilder
 {
     private static readonly string[] Tags =
     [
@@ -23,13 +23,13 @@ public sealed class MicroPayloadBuilder
     private readonly TcBusinessTaxReader _reader;
     private readonly TagMapper _tagMapper;
 
-    public MicroPayloadBuilder(TcBusinessTaxReader reader, TagMapper tagMapper)
+    public MicroHarnessPayloadBuilder(TcBusinessTaxReader reader, TagMapper tagMapper)
     {
         _reader = reader;
         _tagMapper = tagMapper;
     }
 
-    public async Task<MicroPayload> BuildAsync(
+    public async Task<MicroHarnessPayload> BuildAsync(
         string connectionString,
         string taxSourceCode,
         string subjectCode,
@@ -45,7 +45,7 @@ public sealed class MicroPayloadBuilder
         var periodFrom = rows.Min(x => x.PeriodFrom);
         var items = _tagMapper.MapBusinessTaxItems(rows, Tags);
 
-        return new MicroPayload
+        return new MicroHarnessPayload
         {
             PayloadVersion = "2026.1",
             TaxSourceCode = taxSourceCode,

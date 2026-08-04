@@ -1,44 +1,39 @@
-# Tax Hub — Work Plan 2
+# Tax Hub — Work Plan 2  
 
-## Objective 2: HMRC Submission Logic
+## Objective 2: Submission Logic (Test Harness Payloads)
 
-Version: Objective 2.1  
-Status: Engineering Work Plan
+Version: Objective 2.2  
+Status: Updated Engineering Work Plan
 
-This Work Plan defines the phased delivery framework for Objective 2 of the Tax
-Hub programme. It covers the implementation of the HMRC submission logic using
-the canonical payload model, operation contract, dataset surface, payload
-builders, validators, mapping utilities, submission runner, and internal
-WebHarness API.
+Objective 2 implements the **Submission Logic Layer** for the Tax Hub.  
+This layer generates **internal test harness payloads**, not HMRC payloads.
 
-All phases must be completed in sequence.  
-All behaviour must follow the specifications in:
+HMRC payloads are defined under Objective 3.
 
-- tax-hub-spec-programme.md
-- tax-hub-implementation-2.md
-- tax-hub-hmrc-repo-structure.md
-- tax-hub-payloads.md
+HMRC transport is implemented under Objective 4.
 
-## Objective 2 Scope Boundary
+## Objective 2 Scope Boundary (Updated)
 
-Objective 2 is responsible for establishing the submission logic layer for the
-`hmrc_mtd` module.
+Objective 2 includes:
 
-This includes:
+- Test harness payload models  
+- OperationType request/response contracts  
+- Dataset readers  
+- Harness payload builders  
+- Harness validators  
+- Mapping utilities  
+- Submission runner  
+- WebHarness endpoints  
 
-- canonical payload models
-- OperationType request/response contracts
-- dataset readers for the authoritative SQL views
-- payload builders for QU, EOPS, Micro, and VAT
-- per-operation validators
-- mapping utilities required by the payload builders
-- a single submission runner
-- internal WebHarness endpoints for end-to-end testing of canonical payload generation
+Objective 2 does **not** include:
 
-Objective 2 does **not** complete the full HMRC transport platform. OAuth,
-fraud-prevention headers, live HMRC transport, submission audit persistence, and
-alignment scheduling belong to later implementation work, even where foundation
-types or placeholders are required by the repository structure.
+- HMRC payloads  
+- HMRC transport  
+- OAuth  
+- Fraud headers  
+- CT600 XML  
+- iXBRL  
+- HMRC endpoint definitions  
 
 ## Phase 1 — Operation Contract and Canonical Envelope
 
@@ -63,24 +58,17 @@ and runner logic depend upon.
 - canonical envelope model structure
 - parameter naming aligned with the implementation instructions
 
-## Phase 2 — Canonical Payload Models
+## Phase 2 — Harness Payload Models
 
-Implement the canonical payload models exactly as defined in the specification:
+Replace “canonical” with “harness”.
 
-- `QuPayload`
-- `EopsPayload`
-- `MicroPayload`
-- `VatPayload`
-- `PayloadEnvelope`
+Deliverables:
 
-These models form the payload surface used by the builders and returned by the
-runner and WebHarness.
-
-**Deliverables:**
-
-- canonical model classes
-- JSON shape matching the payload specification
-- envelope structure compatible with all four submission operations
+- `QuHarnessPayload`  
+- `EopsHarnessPayload`  
+- `MicroHarnessPayload`  
+- `VatHarnessPayload`  
+- `HarnessEnvelope`  
 
 ## Phase 3 — Authoritative Dataset Surface
 
@@ -243,13 +231,13 @@ Verify the complete Objective 2 surface against the supplied specifications.
 
 Verification must confirm:
 
-- canonical payload models match the payload specification
+- harness payload models match the payload specification
 - dataset readers use only the authoritative views
 - builders produce correct payloads for each tax source
 - validators enforce strict parameter and structural rules
 - mapping utilities behave deterministically
 - runner dispatch is correct
-- WebHarness endpoints return canonical outputs through the runner
+- WebHarness endpoints return harness outputs through the runner
 
 **Deliverables:**
 
@@ -263,16 +251,12 @@ Verification must confirm:
 
 Objective 2 is complete when:
 
-- the operation contract is implemented
-- all canonical models are implemented
-- dataset readers return the correct period values
-- payload builders produce the correct envelopes
-- validators enforce all required rules
-- mapping utilities are functional
-- the submission runner dispatches correctly
-- WebHarness controllers return canonical payloads via the runner
-- the implementation remains within the Objective 2 submission-logic boundary
+- Harness payload models are implemented  
+- Dataset readers return correct values  
+- Harness payload builders produce correct envelopes  
+- Validators enforce strict rules  
+- Mapping utilities behave deterministically  
+- Runner dispatches correctly  
+- WebHarness returns harness payloads  
 
-This completes the HMRC submission logic for Objective 2.
-
-**End of Document**
+**End of document.**

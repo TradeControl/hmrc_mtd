@@ -1,21 +1,21 @@
-using TradeControl.Tax.UK.Models.Canonical;
+using TradeControl.Tax.UK.Models.Harness;
 using TradeControl.Tax.UK.Services.Mapping;
 using TradeControl.Tax.UK.Services.TcData;
 
-namespace TradeControl.Tax.UK.Services.Payload;
+namespace TradeControl.Tax.UK.Services.Harness;
 
-public sealed class VatPayloadBuilder
+public sealed class VatHarnessPayloadBuilder
 {
     private readonly TcVatReader _reader;
     private readonly CategoryMapper _categoryMapper;
 
-    public VatPayloadBuilder(TcVatReader reader, CategoryMapper categoryMapper)
+    public VatHarnessPayloadBuilder(TcVatReader reader, CategoryMapper categoryMapper)
     {
         _reader = reader;
         _categoryMapper = categoryMapper;
     }
 
-    public async Task<VatPayload> BuildAsync(
+    public async Task<VatHarnessPayload> BuildAsync(
         string connectionString,
         string taxSourceCode,
         string subjectCode,
@@ -28,7 +28,7 @@ public sealed class VatPayloadBuilder
             throw new InvalidOperationException("No VAT dataset row was found for the requested period.");
         }
 
-        var items = new List<PayloadItem>
+        var items = new List<PayloadHarnessItem>
         {
             new() { Tag = "vatDueSales", Value = _categoryMapper.ToAmount(row.VatDueSales) },
             new() { Tag = "vatDueAcquisitions", Value = _categoryMapper.ToAmount(row.VatDueAcquisitions) },
@@ -41,7 +41,7 @@ public sealed class VatPayloadBuilder
             new() { Tag = "totalValueGoodsReceivedExVAT", Value = _categoryMapper.ToWholeNumber(row.TotalValueGoodsReceivedExVat) }
         };
 
-        return new VatPayload
+        return new VatHarnessPayload
         {
             PayloadVersion = "2026.1",
             TaxSourceCode = taxSourceCode,

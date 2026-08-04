@@ -1,6 +1,6 @@
-namespace TradeControl.Tax.UK.Models.Canonical;
+namespace TradeControl.Tax.UK.Models.Harness;
 
-public sealed class PayloadItem
+public sealed class PayloadHarnessItem
 {
     public required string Tag { get; init; }
 

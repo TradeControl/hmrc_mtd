@@ -1,83 +1,70 @@
-# Tax Hub — Implementation 2
+# Tax Hub — Implementation 2  
 
-## Objective 2: HMRC Submission Logic
+## Objective 2: Submission Logic (Test Harness Payloads)
 
-July 2026  
-Version: Objective 2.1  
-Status: Implementation Instructions  
+August 2026  
+Version: Objective 2.2  
+Status: Updated Implementation Instructions
 
 ## 1. Purpose
 
-This document provides instructions for how to use the supplied specifications
-and the Engineering Work Plan for Objective 2 of the Tax Hub programme.
+Objective 2 defines the **Submission Logic Layer** for the Tax Hub.
 
-Objective 2 is fresh territory. There is no existing repository to inspect. The
-HMRC submission module (`hmrc_mtd`) has a defined architecture, payload
-specification, repository structure, and an Engineering Work Plan
-(`tax-hub-work-plan-2.md`).
+This layer generates **internal test harness payloads** from Trade Control accounting data.  
+These payloads are **not HMRC payloads**.  
+They are raw tag sets used for development, validation, and mapping verification.
 
-The role of this document is to define the delivery process and how the Work
-Plan should be followed. No new plans or specifications are to be created.
+HMRC payloads are defined separately under **Objective 3**.
 
 ## 2. Delivery Process
 
-Read and interpret the following documents in order:
+Read the following documents in order:
 
 1. **tc-design-principles.md**  
-   Architectural philosophy and constraints for all Trade Control engineering
-   work.
-
 2. **tc-development-contract.md**  
-   Delivery rules, communication style, and constraints.
+3. **tax-hub-spec-programme.md** (updated objectives)  
+4. **tax-hub-implementation-2.md** (this document)  
+5. **tax-hub-test-payloads.md** (harness payload spec)  
+6. **tax-hub-hmrc-repo-structure.md** (updated repository structure)  
+7. **tax-hub-workplan-2.md** (updated work plan)
 
-3. **tax-hub-spec-programme.md**  
-   Programme specification defining Objective 2 and its scope.
-
-4. **tax-hub-implementation-2.md**  
-   (this document) — the implementation instructions.
-
-5. **tax-hub-payload.md**  
-   Canonical HMRC payload specification (QU, EOPS, Micro, VAT).
-
-6. **tax-hub-hmrc-repo-structure.md**  
-   Repository structure for the `hmrc_mtd` module.
-
-7. **tax-hub-workplan-2.md**  
-   Engineering Work Plan describing the phases, work packages, dependencies, and
-   delivery sequencing.
-
-Follow this sequence exactly before starting any implementation work.
+Follow this sequence before implementation.
 
 ## 3. Instructions
 
-- Use `tax-hub-work-plan-2.md` as the **authoritative plan** for Objective 2.
-- Do not modify the Work Plan, payload specification, programme specification,
-  or repository structure.
-- Implement the `hmrc_mtd` module according to:
-  - the design principles,
-  - the development contract,
-  - the programme specification,
-  - the payload specification,
-  - the repo structure,
-  - and the Work Plan.
+Objective 2 must:
 
-Do not:
+- Implement the **test harness payload models**  
+- Implement the **test harness payload builders**  
+- Implement the **test harness validators**  
+- Implement the **test harness submission runner**  
+- Implement the **WebHarness API**  
 
-- generate new plans, specs, or architectures,
-- change the defined phases or work packages,
-- introduce additional objectives.
+Objective 2 must **not**:
+
+- Implement HMRC payloads  
+- Implement HMRC transport  
+- Implement CT600 XML  
+- Implement iXBRL  
+- Implement OAuth  
+- Implement fraud headers  
+
+These belong to Objectives 3 and 4.
 
 ## 4. Scope of Implementation
 
-The implementation work must:
+Objective 2 implements:
 
-- create the `hmrc_mtd` module as defined in `tax-hub-hmrc-repo-structure.md`,
-- implement canonical payload models and builders,
-- implement `HmrcSubmissionRunner` as the single entry point,
-- implement the WebHarness API,
-- lay the foundation for the future Alignment Agent,
+- Harness payload models  
+- OperationType request/response contracts  
+- Dataset readers for the authoritative SQL views  
+- Payload builders for QU, EOPS, Micro, VAT (harness only)  
+- Validators  
+- Mapping utilities  
+- Submission runner  
+- WebHarness endpoints
 
-all in accordance with `tax-hub-work-plan-2.md`.
+Objective 2 does **not** implement HMRC submission.
 
 ## 5. Payload Model and OperationType Function Declarations
 
@@ -352,4 +339,16 @@ FROM Cash.vwTaxBizSubmission;
 
 These two views constitute the complete dataset surface required for HMRC_MTD submission operations.
 
-**End of Document**
+## 7. Completion Criteria
+
+Objective 2 is complete when:
+
+- Harness payload models are implemented  
+- Dataset readers return correct values  
+- Payload builders produce correct harness payloads  
+- Validators enforce strict rules  
+- Mapping utilities behave deterministically  
+- Submission runner dispatches correctly  
+- WebHarness controllers return harness payloads  
+
+**End of document.**

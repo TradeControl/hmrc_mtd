@@ -1,6 +1,6 @@
 using TradeControl.Tax.UK.Infrastructure.Logging;
 using TradeControl.Tax.UK.Models.Hmrc;
-using TradeControl.Tax.UK.Services.Payload;
+using TradeControl.Tax.UK.Services.Harness;
 using TradeControl.Tax.UK.Services.Validation;
 
 namespace TradeControl.Tax.UK.Services.Runner;
@@ -15,10 +15,10 @@ public sealed class HmrcSubmissionRunner
     private readonly SubmissionHistoryValidator _submissionHistoryValidator;
     private readonly LiabilityValidator _liabilityValidator;
     private readonly PaymentValidator _paymentValidator;
-    private readonly VatPayloadBuilder _vatPayloadBuilder;
-    private readonly QuPayloadBuilder _quPayloadBuilder;
-    private readonly EopsPayloadBuilder _eopsPayloadBuilder;
-    private readonly MicroPayloadBuilder _microPayloadBuilder;
+    private readonly VatHarnessPayloadBuilder _vatPayloadBuilder;
+    private readonly QuHarnessPayloadBuilder _quPayloadBuilder;
+    private readonly EopsHarnessPayloadBuilder _eopsPayloadBuilder;
+    private readonly MicroHarnessPayloadBuilder _microPayloadBuilder;
     private readonly SubmissionLogger _submissionLogger;
 
     public HmrcSubmissionRunner(
@@ -30,10 +30,10 @@ public sealed class HmrcSubmissionRunner
         SubmissionHistoryValidator submissionHistoryValidator,
         LiabilityValidator liabilityValidator,
         PaymentValidator paymentValidator,
-        VatPayloadBuilder vatPayloadBuilder,
-        QuPayloadBuilder quPayloadBuilder,
-        EopsPayloadBuilder eopsPayloadBuilder,
-        MicroPayloadBuilder microPayloadBuilder,
+        VatHarnessPayloadBuilder vatPayloadBuilder,
+        QuHarnessPayloadBuilder quPayloadBuilder,
+        EopsHarnessPayloadBuilder eopsPayloadBuilder,
+        MicroHarnessPayloadBuilder microPayloadBuilder,
         SubmissionLogger submissionLogger)
     {
         _vatValidator = vatValidator;
@@ -190,7 +190,7 @@ public sealed class HmrcSubmissionRunner
         return new HmrcSubmissionResult
         {
             Status = "success",
-            CanonicalPayload = payload,
+            Payload = payload,
             HmrcResponse = new
             {
                 mode = "simulation",
