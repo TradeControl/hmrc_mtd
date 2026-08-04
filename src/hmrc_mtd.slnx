@@ -8,6 +8,7 @@
     <File Path="../README.md" />
   </Folder>
   <Folder Name="/tmp/">
+    <File Path="../docs/tmp/links.md" />
     <File Path="../docs/tmp/session-brief.md" />
     <File Path="../docs/tmp/tax-hub-hmrc-repo-structure.md" />
     <File Path="../docs/tmp/tax-hub-implementation-4.md" />
