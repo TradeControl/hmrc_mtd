@@ -1,21 +1,20 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace TradeControl.Tax.UK.Hmrc.Vat.v1_0.CustomerInformation
+namespace TradeControl.Tax.UK.Hmrc.Vat.v1_0.CustomerInformation;
+
+public class VatCustomerInformationRequest
 {
-    public class VatCustomerInformationRequest
+    [JsonIgnore]
+    public required string Vrn { get; set; }
+
+    public string ToJson(bool indented = false)
     {
-        [JsonIgnore]
-        public required string Vrn { get; set; }
-
-        public string ToJson(bool indented = false)
+        var options = new JsonSerializerOptions
         {
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = indented
-            };
+            WriteIndented = indented
+        };
 
-            return JsonSerializer.Serialize(this, options);
-        }
+        return JsonSerializer.Serialize(this, options);
     }
 }

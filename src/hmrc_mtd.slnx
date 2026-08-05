@@ -8,11 +8,10 @@
     <File Path="../README.md" />
   </Folder>
   <Folder Name="/tmp/">
+    <File Path="../../tradecontrol.web/docs/specs/tax-hub-spec-programme.md" />
     <File Path="../docs/tmp/links.md" />
     <File Path="../docs/tmp/session-brief.md" />
-    <File Path="../docs/tmp/tax-hub-hmrc-repo-structure.md" />
     <File Path="../docs/tmp/tax-hub-implementation-4.md" />
-    <File Path="../docs/tmp/tax-hub-spec-programme.md" />
     <File Path="../docs/tmp/tax-hub-workplan-4.md" />
   </Folder>
   <Project Path="HMRC.WebHarness/HMRC.WebHarness.csproj" Id="2baaf571-a20a-43a4-ad79-ce299ac00ed5" />
