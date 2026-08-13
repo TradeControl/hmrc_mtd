@@ -44,11 +44,11 @@ The following documents govern the implementation:
 - **tax-hub-spec-programme.md**  
   High‑level specification and delivery plan, located in [treadecontrol.web](https://github.com/TradeControl/tradecontrol.web/blob/HEAD/docs/specs/tax-hub-spec-programme.md).
 
-- **[tax-hub-hmrc-repo-structure.md](docs/tax-hub-hmrc-repo-structure.md)**  
+- **[tax-hub-hmrc-repo-structure-2.md](docs/tax-hub-hmrc-repo-structure-2.md)**  
   Repository layout and file responsibilities.
 
-- **[tax-hub-payloads.md](docs/tax-hub-payloads.md)**
-  Defines the **payload schemas** for all four tax sources supported by the Tax Hub.
+- **[tax-hub-test-payloads.md](docs/tax-hub-test-payloads.md)**
+  Defines the Test Harness **payload schemas** for all four tax sources supported by the Tax Hub.
 
 - **[tax-hub-implementation-2.md](docs/tax-hub-implementation-2.md)**  
   Detailed implementation instructions, including:
