@@ -39,30 +39,10 @@ with the Trade Control platform’s forward development path.
 
 ## Specification Documents
 
-The following documents govern the implementation:
+The following document governs the implementation:
 
 - **tax-hub-spec-programme.md**  
   High‑level specification and delivery plan, located in [treadecontrol.web](https://github.com/TradeControl/tradecontrol.web/blob/HEAD/docs/specs/tax-hub-spec-programme.md).
-
-- **[tax-hub-hmrc-repo-structure-2.md](docs/tax-hub-hmrc-repo-structure-2.md)**  
-  Repository layout and file responsibilities.
-
-- **[tax-hub-test-payloads.md](docs/tax-hub-test-payloads.md)**
-  Defines the Test Harness **payload schemas** for all four tax sources supported by the Tax Hub.
-
-- **[tax-hub-implementation-2.md](docs/tax-hub-implementation-2.md)**  
-  Detailed implementation instructions, including:
-  - OperationType function declarations  
-  - Payload model  
-  - Submission/enquiry semantics  
-  - Dataset surface (SQL views)  
-  - Validator rules  
-  - Execution rules
-
-- **[tax-hub-workplan-2.md](docs/tax-hub-workplan-2.md)**
-  Engineering Work Plan - phased delivery framework.
-
-These documents must be followed exactly by the coding model.
 
 ## Build & Runtime
 

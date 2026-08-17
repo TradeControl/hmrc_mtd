@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/docs/">
     <File Path="../docs/brexit-vat-surface.md" />
+    <File Path="../docs/sole-trader-field-sets.md" />
     <File Path="../docs/tax-hub-hmrc-repo-structure-2.md" />
     <File Path="../docs/tax-hub-implementation-2.md" />
     <File Path="../docs/tax-hub-test-payloads.md" />
